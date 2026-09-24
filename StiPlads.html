@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Belægningsgrad – Vælg kategori</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f2f2f7;
+            margin: 0;
+            padding: 15px;
+            color: #1c1c1e;
+        }
+        .app {
+            max-width: 500px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 26px;
+        }
+        .underoverskrift {
+            text-align: center;
+            font-size: 16px;
+            color: #8e8e93;
+            margin-bottom: 25px;
+            font-weight: normal;
+        }
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .menu-knapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .menu-knap {
+            padding: 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 19px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.1s, transform 0.1s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        .menu-knap:active {
+            opacity: 0.7;
+            transform: scale(0.98);
+        }
+        .knap-draegtige {
+            background-color: #007aff;
+            color: white;
+        }
+        .knap-orne {
+            background-color: #34c759;
+            color: white;
+        }
+        .knap-ikke-draegtige {
+            background-color: #ff9500;
+            color: white;
+        }
+        
+        /* Skift mellem sider */
+        .side {
+            display: none;
+        }
+        .side.aktiv {
+            display: block;
+        }
+        .tilbage-knap {
+            background-color: #8e8e93;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            font-size: 17px;
+            border: 1px solid #c7c7cc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: #fafafa;
+        }
+        input:focus {
+            outline: none;
+            border-color: #007aff;
+            background-color: #fff;
+        }
+        .felt-gruppe {
+            display: flex;
+            gap: 12px;
+        }
+        .felt {
+            flex: 1;
+        }
+        .knap-gruppe {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        .knap-gruppe button {
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.1s;
+        }
+        .knap-gruppe button:active {
+            opacity: 0.7;
+        }
+        #beregnKnap, #beregnOrneKnap, #beregnIkkeDraegtigeKnap {
+            flex: 2;
+            background-color: #007aff;
+            color: white;
+        }
+        #nulstilKnap, #nulstilOrneKnap, #nulstilIkkeDraegtigeKnap {
+            flex: 1;
+            background-color: #8e8e93;
+            color: white;
+        }
+        #resultat, #resultatOrne, #resultatIkkeDraegtige {
+            margin-top: 20px;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .groen {
+            background-color: #e3fbe3;
+            color: #1e6b26;
+            border: 2px solid #34c759;
+        }
+        .roed {
+            background-color: #ffe5e5;
+            color: #8b1e1e;
+            border: 2px solid #ff3b30;
+        }
+        #krav, #kravOrne, #kravIkkeDraegtige {
+            margin-top: 12px;
+            padding: 15px;
+            background-color: #fffbfa;
+            border: 1px solid #e5e5ea;
+            border-radius: 10px;
+            line-height: 1.45;
+            font-size: 15px;
+        }
+        #advarsel {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #fff9e6;
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+            color: #665200;
+            text-align: left;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #fafafa;
+            border: 1px solid #c7c7cc;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .checkbox-container input {
+            width: 22px;
+            height: 22px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        .checkbox-container span {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e5e5ea;
+            border-radius: 10px;
+            line-height: 1.5;
+            font-size: 13px;
+        }
+        .info table {
+            width: 100%;
+            margin-top: 8px;
+            border-collapse: collapse;
+        }
+        .info td {
+            padding: 3px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <!-- FORSIDE -->
+    <div id="side-forside" class="side aktiv">
+        <div class="box">
+            <h1>🐷 Belægningsgrad</h1>
+            <div class="underoverskrift">Vælg dyrekategori</div>
+            
+            <div class="menu-knapper">
+                <button class="menu-knap knap-draegtige" onclick="skiftSide('draegtige')">Drægtige</button>
+                <button class="menu-knap knap-orne" onclick="skiftSide('orne')">Orne</button>
+                <button class="menu-knap knap-ikke-draegtige" onclick="skiftSide('ikke-draegtige')">Ikke drægtige</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DRÆGTIGE SIDE -->
+    <div id="side-draegtige" class="side">
+        <button class="tilbage-knap" onclick="skiftSide('forside')">← Tilbage til menu</button>
+        <div class="box">
+            <h1>🐷 Belægningsgrad</h1>
+            <div class="underoverskrift">Drægtige</div>
+            
+            <label>Sti-nr.</label>
+            <input type="text" id="sti" placeholder="F.eks. 12">
+
+            <div class="felt-gruppe">
+                <div class="felt">
+                    <label>Antal polte</label>
+                    <input type="number" id="polte" min="0" placeholder="0">
+                </div>
+                <div class="felt">
+                    <label>Antal gylte</label>
+                    <input type="number" id="gylte" min="0" placeholder="0">
+                </div>
+                <div class="felt">
+                    <label>Antal søer</label>
+                    <input type="number" id="soer" min="0" placeholder="0">
+                </div>
+            </div>
+
+            <div class="felt-gruppe">
+                <div class="felt">
+                    <label>Stiens længde (m)</label>
+                    <input type="text" id="laengde" inputmode="decimal" placeholder="F.eks. 5,50">
+                </div>
+                <div class="felt">
+                    <label>Stiens bredde (m)</label>
+                    <input type="text" id="bredde" inputmode="decimal" placeholder="F.eks. 3,20">
+                </div>
+            </div>
+
+            <div class="felt-gruppe">
+                <div class="felt">
+                    <label>Fast gulv – længde (m)</label>
+                    <input type="text" id="fastLaengde" inputmode="decimal" placeholder="Valgfrit">
+                </div>
+                <div class="felt">
+                    <label>Fast gulv – bredde (m)</label>
+                    <input type="text" id="fastBredde" inputmode="decimal" placeholder="Valgfrit">
+                </div>
+            </div>
+
+            <div class="knap-gruppe">
+                <button id="beregnKnap" onclick="beregn()">BEREGN</button>
+                <button id="nulstilKnap" onclick="nulstil()">NULSTIL</button>
+            </div>
+
+            <div id="advarsel" style="display:none;"></div>
+            <div id="resultat" style="display:none;"></div>
+            <div id="krav" style="display:none;"></div>
+        </div>
+
+        <div class="info">
+            <strong>Regler:</strong><br>
+            Polte over 110 kg: 1,00 m² pr. dyr (ingen krav til sidestørrelse eller fast gulv, og ikke 10% tillæg ved under 6 dyr).<br>
+            Gylt: 1,64 m² pr. dyr.<br>
+            So: 2,25 m² pr. dyr.<br>
+            Under 6 dyr i alt = 10 % tillæg til arealkravet (gælder kun gylte/søer, ikke polte).<br>
+            1–5 dyr (med gylte/søer) = begge sider over 2,4 m.<br>
+            6 dyr eller derover (med gylte/søer) = begge sider over 2,8 m.<br><br>
+            <strong>Fast gulv:</strong><br>
+            Gylt: 0,95 m² pr. dyr.<br>
+            So: 1,30 m² pr. dyr.<br>
+        </div>
+    </div>
+
+    <!-- ORNE SIDE -->
+    <div id="side-orne" class="side">
+        <button class="tilbage-knap" onclick="skiftSide('forside')">← Tilbage til menu</button>
+        <div class="box">
+            <h1>🐷 Orne</h1>
+            <div class="underoverskrift">Orneberegner</div>
+            
+            <label>Sti-nr.</label>
+            <input type="text" id="stiOrne" placeholder="F.eks. 12">
+
+            <label>Antal orner</label>
+            <input type="number" id="antalOrner" value="1" min="1">
+            
+            <div class="felt-gruppe">
+                <div class="felt">
+                    <label>Længde på sti (m)</label>
+                    <input type="text" id="laengdeOrne" inputmode="decimal" placeholder="F.eks. 3,00">
+                </div>
+                <div class="felt">
+                    <label>Bredde på sti (m)</label>
+                    <input type="text" id="breddeOrne" inputmode="decimal" placeholder="F.eks. 2,50">
+                </div>
+            </div>
+            
+            <!-- CHECKBOX TIL NATURLIG BEDÆKNING -->
+            <label class="checkbox-container">
+                <input type="checkbox" id="bedaekning">
+                <span>Stien bruges til naturlig bedækning</span>
+            </label>
+            
+            <div class="knap-gruppe">
+                <button id="beregnOrneKnap" onclick="beregnOrne()">BEREGN</button>
+                <button id="nulstilOrneKnap" onclick="nulstilOrne()">NULSTIL</button>
+            </div>
+            
+            <div id="resultatOrne" style="display:none;"></div>
+            <div id="kravOrne" style="display:none;"></div>
+        </div>
+        
+        <div class="info">
+            <strong>Lovkrav til orner:</strong><br>
+            • Standard enkeltsti: Mindst <strong>6,00 m²</strong> frit gulvareal pr. orne.<br>
+            • Ved naturlig bedækning: Mindst <strong>10,00 m²</strong> frit gulvareal pr. orne.
+        </div>
+    </div>
+
+    <!-- IKKE DRÆGTIGE SIDE -->
+    <div id="side-ikke-draegtige" class="side">
+        <button class="tilbage-knap" onclick="skiftSide('forside')">← Tilbage til menu</button>
+        <div class="box">
+            <h1>🐷 Grise 10-110kg</h1>
+            <div class="underoverskrift">Ikke drægtige</div>
+            
+            <label>Sti-nr.</label>
+            <input type="text" id="stiIkkeDraegtige" placeholder="F.eks. 12">
+            
+            <label>Antal grise</label>
+            <input type="number" id="grise" placeholder="F.eks. 6" min="1">
+            
+            <label>Gennemsnitsvægt (kg)</label>
+            <input type="number" id="vaegt" placeholder="F.eks. 45" min="0" step="0.1">
+            
+            <div class="felt-gruppe">
+                <div class="felt">
+                    <label>Længde på sti (m)</label>
+                    <input type="text" id="laengdeIkkeDraegtige" inputmode="decimal" placeholder="F.eks. 5,50">
+                </div>
+                <div class="felt">
+                    <label>Bredde på sti (m)</label>
+                    <input type="text" id="breddeIkkeDraegtige" inputmode="decimal" placeholder="F.eks. 3,20">
+                </div>
+            </div>
+            
+            <div class="knap-gruppe">
+                <button id="beregnIkkeDraegtigeKnap" onclick="beregnIkkeDraegtige()">BEREGN</button>
+                <button id="nulstilIkkeDraegtigeKnap" onclick="nulstilIkkeDraegtige()">NULSTIL</button>
+            </div>
+            
+            <div id="resultatIkkeDraegtige" style="display:none;"></div>
+            <div id="kravIkkeDraegtige" style="display:none;"></div>
+        </div>
+        
+        <div class="info">
+            <strong>Lovkrav til frit gulvareal:</strong>
+            <table>
+                <tr><td>&le; 10 kg:</td><td><strong>0,15 m²</strong> pr. gris</td></tr>
+                <tr><td>&gt; 10 kg til 20 kg:</td><td><strong>0,20 m²</strong> pr. gris</td></tr>
+                <tr><td>&gt; 20 kg til 30 kg:</td><td><strong>0,30 m²</strong> pr. gris</td></tr>
+                <tr><td>&gt; 30 kg til 50 kg:</td><td><strong>0,40 m²</strong> pr. gris</td></tr>
+                <tr><td>&gt; 50 kg til 85 kg:</td><td><strong>0,55 m²</strong> pr. gris</td></tr>
+                <tr><td>&gt; 85 kg til 110 kg:</td><td><strong>0,65 m²</strong> pr. gris</td></tr>
+                <tr><td>Over 110 kg:</td><td><strong>1,00 m²</strong> pr. gris</td></tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function skiftSide(sideID) {
+    document.querySelectorAll('.side').forEach(s => s.classList.remove('aktiv'));
+    document.getElementById('side-' + sideID).classList.add('aktiv');
+    window.scrollTo(0, 0);
+}
+
+function tal(værdi) {
+    if (!værdi) return 0;
+    return parseFloat(værdi.toString().replace(",", "."));
+}
+
+/* --- FUNKTIONER FOR DRÆGTIGE --- */
+function beregnKrav(polte, gylte, soer) {
+    let samletAntal = polte + gylte + soer;
+    let kunPolte = (polte > 0 && gylte === 0 && soer === 0);
+    
+    let basePolte = polte * 1.00;
+    let baseGylte = gylte * 1.64;
+    let baseSoer = soer * 2.25;
+    
+    let kravPolte = basePolte;
+    let kravGylte = baseGylte;
+    let kravSoer = baseSoer;
+    
+    let harTillæg = (samletAntal > 0 && samletAntal < 6 && !kunPolte);
+    
+    if (harTillæg) {
+        kravGylte *= 1.10;
+        kravSoer *= 1.10;
+    }
+    
+    let kravEfterModifikation = kravPolte + kravGylte + kravSoer;
+    
+    return {
+        samletAntal: samletAntal,
+        harTillæg: harTillæg,
+        kravPolte: kravPolte,
+        kravGylte: kravGylte,
+        kravSoer: kravSoer,
+        kravEfterModifikation: kravEfterModifikation
+    };
+}
+
+function beregnFastGulvKrav(polte, gylte, soer) {
+    return (gylte * 0.95) + (soer * 1.30);
+}
+
+function beregnSideKrav(samletAntal) {
+    return samletAntal < 6 ? 2.40 : 2.80;
+}
+
+function beregnMaksDyr(areal, fastGulvAreal, fastGulvIndtastet) {
+    let maxPolte = 0;
+    let maxGylte = 0;
+    let maxSoer = 0;
+
+    for (let antal = 1; antal <= 1000; antal++) {
+        let kravAreal = antal * 1.00;
+        if (areal >= kravAreal) maxPolte = antal;
+        else break;
+    }
+
+    for (let antal = 1; antal <= 1000; antal++) {
+        let kravAreal = antal * 1.64;
+        if (antal < 6) kravAreal *= 1.10;
+        let kravFast = antal * 0.95;
+        if (areal >= kravAreal && (!fastGulvIndtastet || fastGulvAreal >= kravFast)) maxGylte = antal;
+        else break;
+    }
+
+    for (let antal = 1; antal <= 1000; antal++) {
+        let kravAreal = antal * 2.25;
+        if (antal < 6) kravAreal *= 1.10;
+        let kravFast = antal * 1.30;
+        if (areal >= kravAreal && (!fastGulvIndtastet || fastGulvAreal >= kravFast)) maxSoer = antal;
+        else break;
+    }
+
+    return { maxPolte: maxPolte, maxGylte: maxGylte, maxSoer: maxSoer };
+}
+
+function beregn() {
+    let sti = document.getElementById("sti").value.trim();
+    let polte = parseInt(document.getElementById("polte").value) || 0;
+    let gylte = parseInt(document.getElementById("gylte").value) || 0;
+    let soer = parseInt(document.getElementById("soer").value) || 0;
+    
+    let laengdeRaw = document.getElementById("laengde").value;
+    let breddeRaw = document.getElementById("bredde").value;
+    
+    if (!laengdeRaw || !breddeRaw || (polte === 0 && gylte === 0 && soer === 0)) {
+        alert("Udfyld venligst antal dyr samt stiens længde og bredde.");
+        return;
+    }
+    
+    let laengde = tal(laengdeRaw);
+    let bredde = tal(breddeRaw);
+    let areal = laengde * bredde;
+    
+    let fastLaengdeRaw = document.getElementById("fastLaengde").value.trim();
+    let fastBreddeRaw = document.getElementById("fastBredde").value.trim();
+    let fastGulvIndtastet = fastLaengdeRaw !== "" && fastBreddeRaw !== "";
+    let fastGulvAreal = fastGulvIndtastet ? (tal(fastLaengdeRaw) * tal(fastBreddeRaw)) : 0;
+    
+    let krav = beregnKrav(polte, gylte, soer);
+    let fastKrav = beregnFastGulvKrav(polte, gylte, soer);
+    let sideKrav = beregnSideKrav(krav.samletAntal);
+    
+    let arealOK = areal >= krav.kravEfterModifikation;
+    let kunPolte = (polte > 0 && gylte === 0 && soer === 0);
+    let sideOK = kunPolte || (laengde >= sideKrav && bredde >= sideKrav);
+    let fastOK = fastKrav === 0 || !fastGulvIndtastet || fastGulvAreal >= fastKrav;
+    
+    let advarselDiv = document.getElementById("advarsel");
+    let resultatDiv = document.getElementById("resultat");
+    let kravDiv = document.getElementById("krav");
+    
+    let advarsler = [];
+    if (!sideOK) advarsler.push("⚠️ Målene overholder ikke sidekravet! Begge sider skal være mindst " + sideKrav.toString().replace(".", ",") + " m ved " + krav.samletAntal + " dyr.");
+    if (!arealOK) advarsler.push("⚠️ Samlet areal er for lille! Aktuelt areal (" + areal.toFixed(2).replace(".", ",") + " m²) opfylder ikke kravet på " + krav.kravEfterModifikation.toFixed(2).replace(".", ",") + " m².");
+    if (!fastOK && fastKrav > 0) advarsler.push("⚠️ Fast gulv areal er for lille! Aktuelt fast gulv (" + fastGulvAreal.toFixed(2).replace(".", ",") + " m²) opfylder ikke kravet på " + fastKrav.toFixed(2).replace(".", ",") + " m².");
+    
+    if (advarsler.length > 0) {
+        advarselDiv.style.display = "block";
+        advarselDiv.innerHTML = advarsler.join("<br><br>");
+    } else {
+        advarselDiv.style.display = "none";
+        advarselDiv.innerHTML = "";
+    }
+    
+    resultatDiv.style.display = "block";
+    if (arealOK && sideOK && fastOK) {
+        resultatDiv.className = "groen";
+        resultatDiv.innerHTML = "GODKENDT";
+    } else {
+        resultatDiv.className = "roed";
+        resultatDiv.innerHTML = "IKKE GODKENDT";
+    }
+    
+    let tekst = "Sti " + (sti ? sti : "-") + " specifikationer:<br>";
+    tekst += "Aktuelt areal: " + areal.toFixed(2).replace(".", ",") + " m²<br>";
+    tekst += "Lovkrav til areal: " + krav.kravEfterModifikation.toFixed(2).replace(".", ",") + " m²<br>";
+    
+    tekst += "<br><span style='color: #555;'><strong>Beregning af arealkrav:</strong><br>";
+    if (polte > 0) tekst += "• Polte: " + polte + " stk. × 1,00 m² = " + krav.kravPolte.toFixed(2).replace(".", ",") + " m²<br>";
+    if (gylte > 0) {
+        tekst += "• Gylte: " + gylte + " stk. × 1,64 m²";
+        if (krav.harTillæg) tekst += " + 10% (= " + krav.kravGylte.toFixed(2).replace(".", ",") + " m²)";
+        else tekst += " = " + krav.kravGylte.toFixed(2).replace(".", ",") + " m²";
+        tekst += "<br>";
+    }
+    if (soer > 0) {
+        tekst += "• Søer: " + soer + " stk. × 2,25 m²";
+        if (krav.harTillæg) tekst += " + 10% (= " + krav.kravSoer.toFixed(2).replace(".", ",") + " m²)";
+        else tekst += " = " + krav.kravSoer.toFixed(2).replace(".", ",") + " m²";
+        tekst += "<br>";
+    }
+    tekst += "</span>";
+
+    if (fastGulvIndtastet && fastKrav > 0) {
+        tekst += "<br>Fast gulv areal: " + fastGulvAreal.toFixed(2).replace(".", ",") + " m² (Krav: " + fastKrav.toFixed(2).replace(".", ",") + " m²)<br>";
+    }
+    
+    let maks = beregnMaksDyr(areal, fastGulvAreal, fastGulvIndtastet);
+    tekst += "<br><strong>Maksimal kapacitet for denne sti:</strong><br>";
+    tekst += "Kun polte: " + maks.maxPolte + " stk.<br>";
+    tekst += "Kun gylte: " + maks.maxGylte + " stk.<br>";
+    tekst += "Kun søer: " + maks.maxSoer + " stk.";
+    
+    kravDiv.style.display = "block";
+    kravDiv.innerHTML = tekst;
+}
+
+function nulstil() {
+    document.getElementById("sti").value = "";
+    document.getElementById("polte").value = "";
+    document.getElementById("gylte").value = "";
+    document.getElementById("soer").value = "";
+    document.getElementById("laengde").value = "";
+    document.getElementById("bredde").value = "";
+    document.getElementById("fastLaengde").value = "";
+    document.getElementById("fastBredde").value = "";
+    document.getElementById("advarsel").style.display = "none";
+    document.getElementById("resultat").style.display = "none";
+    document.getElementById("krav").style.display = "none";
+}
+
+/* --- FUNKTIONER FOR ORNER --- */
+function beregnOrne() {
+    let sti = document.getElementById("stiOrne").value.trim();
+    let antalOrner = parseInt(document.getElementById("antalOrner").value) || 1;
+    let laengdeRaw = document.getElementById("laengdeOrne").value;
+    let breddeRaw = document.getElementById("breddeOrne").value;
+    let bedaekning = document.getElementById("bedaekning").checked;
+    
+    if (!laengdeRaw || !breddeRaw) {
+        alert("Udfyld venligst stiens længde og bredde.");
+        return;
+    }
+    
+    let laengde = tal(laengdeRaw);
+    let bredde = tal(breddeRaw);
+    let areal = laengde * bredde;
+    
+    let enhedskrav = bedaekning ? 10.00 : 6.00;
+    let kravAreal = antalOrner * enhedskrav;
+    
+    let resultat = document.getElementById("resultatOrne");
+    let krav = document.getElementById("kravOrne");
+    
+    resultat.style.display = "block";
+    if (areal >= kravAreal) {
+        resultat.className = "groen";
+        resultat.innerHTML = "✅ GODKENDT<br><br>" + areal.toFixed(2).replace(".", ",") + " m² til rådighed";
+    } else {
+        resultat.className = "roed";
+        resultat.innerHTML = "❌ IKKE GODKENDT<br><br>" + areal.toFixed(2).replace(".", ",") + " m² til rådighed";
+    }
+    
+    let anvendelse = bedaekning ? "Naturlig bedækning" : "Standard orneleje";
+    
+    krav.style.display = "block";
+    krav.innerHTML = "<strong>Sti " + (sti ? sti : "-") + "</strong><br><br>" +
+                     "Anvendelse: " + anvendelse + "<br>" +
+                     "Antal orner: " + antalOrner + " stk.<br>" +
+                     "Stiens størrelse: " + laengde.toFixed(2).replace(".", ",") + " × " + bredde.toFixed(2).replace(".", ",") + " m<br><br>" +
+                     "<strong>Areal-lovkrav (" + antalOrner + " stk. × " + enhedskrav.toFixed(2).replace(".", ",") + " m²):</strong><br>" +
+                     "<span style='font-size:24px; font-weight:bold;'>" + kravAreal.toFixed(2).replace(".", ",") + " m²</span>";
+}
+
+function nulstilOrne() {
+    document.getElementById("stiOrne").value = "";
+    document.getElementById("antalOrner").value = "1";
+    document.getElementById("laengdeOrne").value = "";
+    document.getElementById("breddeOrne").value = "";
+    document.getElementById("bedaekning").checked = false;
+    
+    document.getElementById("resultatOrne").style.display = "none";
+    document.getElementById("kravOrne").style.display = "none";
+}
+
+/* --- FUNKTIONER FOR IKKE DRÆGTIGE (GRISE 10-110 KG) --- */
+function hentBasisKrav(vaegt) {
+    if (vaegt <= 10) return 0.15;
+    if (vaegt <= 20) return 0.20;
+    if (vaegt <= 30) return 0.30;
+    if (vaegt <= 50) return 0.40;
+    if (vaegt <= 85) return 0.55;
+    if (vaegt <= 110) return 0.65;
+    return 1.00;
+}
+
+function beregnIkkeDraegtige() {
+    let sti = document.getElementById("stiIkkeDraegtige").value.trim();
+    let grise = parseInt(document.getElementById("grise").value);
+    let vaegt = parseFloat(document.getElementById("vaegt").value);
+    let laengdeRaw = document.getElementById("laengdeIkkeDraegtige").value;
+    let breddeRaw = document.getElementById("breddeIkkeDraegtige").value;
+    
+    if (isNaN(grise) || isNaN(vaegt) || !laengdeRaw || !breddeRaw) {
+        alert("Udfyld alle felter (antal grise, gennemsnitsvægt, længde og bredde).");
+        return;
+    }
+    
+    let laengde = tal(laengdeRaw);
+    let bredde = tal(breddeRaw);
+    let areal = laengde * bredde;
+    
+    let kravPrGris = hentBasisKrav(vaegt);
+    let samletKrav = grise * kravPrGris;
+    let maxGrise = Math.floor(areal / kravPrGris);
+    
+    let resultat = document.getElementById("resultatIkkeDraegtige");
+    let krav = document.getElementById("kravIkkeDraegtige");
+    
+    resultat.style.display = "block";
+    if (areal >= samletKrav) {
+        resultat.className = "groen";
+        resultat.innerHTML = "✅ GODKENDT<br><br>" + areal.toFixed(2).replace(".", ",") + " m² til rådighed";
+    } else {
+        resultat.className = "roed";
+        resultat.innerHTML = "❌ IKKE GODKENDT<br><br>" + areal.toFixed(2).replace(".", ",") + " m² til rådighed";
+    }
+    
+    krav.style.display = "block";
+    krav.innerHTML = "<strong>Sti " + (sti ? sti : "-") + "</strong><br><br>" +
+                     "Antal grise indsat: " + grise + " stk. (" + vaegt.toString().replace(".", ",") + " kg)<br>" +
+                     "Stiens størrelse: " + laengde.toFixed(2).replace(".", ",") + " × " + bredde.toFixed(2).replace(".", ",") + " m<br>" +
+                     "Maks. tilladt i stien ved denne vægt: <strong>" + maxGrise + " grise</strong><br><br>" +
+                     "<strong>Lovkrav til nuværende hold:</strong><br>" +
+                     "Hver gris skal have: " + kravPrGris.toFixed(2).replace(".", ",") + " m²<br>" +
+                     "<span style='font-size:28px;'>" + samletKrav.toFixed(2).replace(".", ",") + " m²</span>";
+}
+
+function nulstilIkkeDraegtige() {
+    document.getElementById("stiIkkeDraegtige").value = "";
+    document.getElementById("grise").value = "";
+    document.getElementById("vaegt").value = "";
+    document.getElementById("laengdeIkkeDraegtige").value = "";
+    document.getElementById("breddeIkkeDraegtige").value = "";
+    
+    document.getElementById("resultatIkkeDraegtige").style.display = "none";
+    document.getElementById("kravIkkeDraegtige").style.display = "none";
+}
+</script>
+</body>
+</html>
